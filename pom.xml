@@ -9,7 +9,7 @@
 	<packaging>war</packaging>
 
 	<name>jingyujie</name>
-	<description>Demo project for Spring Boot</description>
+	<description>鲸鱼街</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
