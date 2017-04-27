@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by 橘 on 2016/12/26.
  */
 @Entity
-@Table(name = "wx_media_log", schema = "alienlab_wechat")
+@Table(name = "wx_media_log", schema = "jingyujie_wechat")
 public class WxMediaLog {
     private long mediaLogId;
     private String openid;

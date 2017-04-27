@@ -32,17 +32,17 @@ public class SignUtil {
     public  boolean checkSignature(String signature, String timestamp, String nonce) {
         String[] arr = new String[] { token, timestamp, nonce };  
         // 将token、timestamp、nonce三个参数进行字典序排序  
-        Arrays.sort(arr);  
+        Arrays.sort(arr);
+        // 将三个参数字符串拼接成一个字符串
         StringBuilder content = new StringBuilder();  
         for (int i = 0; i < arr.length; i++) {  
             content.append(arr[i]);  
-        }  
+        }
+        //进行sha1加密
         MessageDigest md = null;  
-        String tmpStr = null;  
-  
+        String tmpStr = null;
         try {  
-            md = MessageDigest.getInstance("SHA-1");  
-            // 将三个参数字符串拼接成一个字符串进行sha1加密  
+            md = MessageDigest.getInstance("SHA-1");
             byte[] digest = md.digest(content.toString().getBytes());  
             tmpStr = byteToStr(digest);  
         } catch (NoSuchAlgorithmException e) {  

@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by 橘 on 2016/12/26.
  */
 @Entity
-@Table(name = "wx_pos_event_log", schema = "alienlab_wechat")
+@Table(name = "wx_pos_event_log", schema = "jingyujie_wechat")
 public class WxPosEventLog {
     private String openid;
     private String unionid;

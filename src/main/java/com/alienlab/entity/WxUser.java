@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * Created by 橘 on 2016/12/26.
  */
 @Entity
-@Table(name = "wx_user", schema = "alienlab_wechat")
+@Table(name = "wx_user", schema = "jingyujie_wechat")
 public class WxUser {
     private String userPhone;
     private String userStatus;

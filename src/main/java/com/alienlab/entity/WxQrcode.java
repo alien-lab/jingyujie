@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by 橘 on 2016/12/26.
  */
 @Entity
-@Table(name = "wx_qrcode", schema = "alienlab_wechat")
+@Table(name = "wx_qrcode", schema = "jingyujie_wechat")
 public class WxQrcode {
     private long qrcodeId;
     private String qrcodeKey;
