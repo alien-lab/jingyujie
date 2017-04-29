@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.security.PublicKey;
 import java.util.List;
 
 /**
@@ -23,9 +24,9 @@ public class ArtworkService {
 
     //添加艺术品
     public Artwork addArtwork(Artwork artwork) {
-        try{
+        try {
             return artworkRepository.save(artwork);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -47,11 +48,29 @@ public class ArtworkService {
         }
     }
 
+    //批量删除艺术品
+    public boolean batchDeleteArtwork(List<Long> ids) {
+        try {
+            for (Long id : ids) {
+                Artwork artwork = artworkRepository.getOne(id);
+                List<Detail> details = detailRepository.getDetailByArtwork(artwork);
+                for (Detail detail : details) {
+                    detailRepository.delete(detail);
+                }
+                artworkRepository.delete(id);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //修改
     public Artwork updateArtwork(Artwork artwork) {
-        try{
+        try {
             return artworkRepository.save(artwork);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -59,9 +78,19 @@ public class ArtworkService {
 
     //根据id查
     public Artwork getArtworkById(Long id) {
-        try{
+        try {
             return artworkRepository.getOne(id);
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    //根据name模糊查
+    public Page<Artwork> getArtworkByNameLikePage(String likeName, Integer index, Integer size) {
+        try {
+            return artworkRepository.findByNameContaining("%"+likeName+"%", new PageRequest(index, size));
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -69,9 +98,9 @@ public class ArtworkService {
 
     //查所有
     public List<Artwork> getAllArtwork() {
-        try{
+        try {
             return artworkRepository.findAll();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -79,9 +108,9 @@ public class ArtworkService {
 
     //分页查
     public Page<Artwork> getAllByPage(Integer index, Integer size) {
-        try{
+        try {
             return artworkRepository.findAll(new PageRequest(index, size));
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

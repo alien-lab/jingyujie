@@ -29,11 +29,13 @@ import static com.alibaba.fastjson.JSON.parseObject;
 public class ArtworkController {
     @Autowired
     private ArtworkService artworkService;
-    @RequestMapping(value = "/addArtwork",method = RequestMethod.POST)
-    public String addArtwork(HttpServletRequest request){
+
+    //添加artwork
+    @RequestMapping(value = "/addArtwork", method = RequestMethod.POST)
+    public String addArtwork(HttpServletRequest request) {
         String jsonBody = null;
         try {
-            jsonBody = IOUtils.toString(request.getInputStream(),"UTF-8");
+            jsonBody = IOUtils.toString(request.getInputStream(), "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,30 +47,104 @@ public class ArtworkController {
         artwork.setArtist(params.getString("artist"));
         artwork.setNumber(params.getInteger("number"));
         artwork.setDate(Timestamp.valueOf(params.getString("date")));
-        try{
+        try {
             Artwork result = artworkService.addArtwork(artwork);
-            if (result == null){
-                return new ExecResult(false,"添加艺术品信息失败").toString();
-            }else {
+            if (result == null) {
+                return new ExecResult(false, "添加艺术品信息失败").toString();
+            } else {
                 ExecResult execResult = new ExecResult();
                 execResult.setResult(true);
                 execResult.setData((JSON) JSON.toJSON(result));
                 return execResult.toString();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ExecResult(false,"添加艺术品信息异常").toString();
+            return new ExecResult(false, "添加艺术品信息异常").toString();
         }
     }
-    @RequestMapping(value = "/getAll",method = RequestMethod.GET)
-    public String getAllArtwork(){
+
+    //获取所有艺术品
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    public String getAllArtwork() {
         List<Artwork> artworks = artworkService.getAllArtwork();
         return JSON.toJSONString(artworks);
     }
-    @RequestMapping(value = "/getAllByPage/{index}-{size}",method = RequestMethod.GET)
-    public Page<Artwork> getAllByPage(@PathVariable("index") String index, @PathVariable("size") String size){
-        System.out.println(index+size);
-        Page<Artwork> artworks = artworkService.getAllByPage(Integer.parseInt(index),Integer.parseInt(size));
+
+    //分页获取艺术品
+    @RequestMapping(value = "/getAllByPage/{index}-{size}", method = RequestMethod.GET)
+    public Page<Artwork> getAllByPage(@PathVariable("index") String index, @PathVariable("size") String size) {
+        Page<Artwork> artworks = artworkService.getAllByPage(Integer.parseInt(index), Integer.parseInt(size));
         return artworks;
+    }
+
+    //修改artwork
+    @RequestMapping(value = "/updateArtwork", method = RequestMethod.POST)
+    public String updateArtwork(HttpServletRequest request) {
+        String jsonBody = null;
+        try {
+            jsonBody = IOUtils.toString(request.getInputStream(), "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject form = parseObject(jsonBody);
+        JSONObject params = form.getJSONObject("params");
+        System.out.println(params);
+        Artwork artwork = artworkService.getArtworkById(params.getLong("id"));
+        artwork.setName(params.getString("name"));
+        artwork.setArtist(params.getString("artist"));
+        artwork.setNumber(params.getInteger("number"));
+        try {
+            Artwork result = artworkService.updateArtwork(artwork);
+            if (result == null) {
+                return new ExecResult(false, "修改艺术品信息失败").toString();
+            } else {
+                ExecResult execResult = new ExecResult();
+                execResult.setResult(true);
+                execResult.setData((JSON) JSON.toJSON(result));
+                return execResult.toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ExecResult(false, "修改艺术品信息异常").toString();
+        }
+    }
+
+    //删除artwork
+    @RequestMapping(value = "/deleteArtwork/{id}", method = RequestMethod.DELETE)
+    public String deleteArtwork(@PathVariable("id") Long id) {
+        System.out.println(id);
+        try {
+            if (artworkService.deleteArtwork(id)) {
+                return new ExecResult(true, "艺术品删除成功").toString();
+            } else {
+                return new ExecResult(false, "艺术品删除失败").toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ExecResult(false, "艺术品删除异常").toString();
+        }
+    }
+
+    //批量删除artwork
+    @RequestMapping(value = "/batchDeleteArtwork/{ids}", method = RequestMethod.DELETE)
+    public String batchDeleteArtwork(@PathVariable("ids") List<Long> ids) {
+        System.out.println(ids);
+        try {
+            if (artworkService.batchDeleteArtwork(ids)) {
+                return new ExecResult(true, "艺术品批量删除成功").toString();
+            } else {
+                return new ExecResult(false, "艺术品批量删除失败").toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ExecResult(false, "艺术品批量删除异常").toString();
+        }
+    }
+
+    //根据name分页模糊查
+    @RequestMapping(value = "/getArtworkByNameLikePage/{likeName}-{index}-{size}", method = RequestMethod.GET)
+    public Page<Artwork> getArtworkByNameLikePage(@PathVariable("likeName") String likeName, @PathVariable("index") String index, @PathVariable("size") String size) {
+        System.out.println(likeName+"-"+index+"-"+size);
+        return artworkService.getArtworkByNameLikePage(likeName, Integer.parseInt(index), Integer.parseInt(size));
     }
 }
