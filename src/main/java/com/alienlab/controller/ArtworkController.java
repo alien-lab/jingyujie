@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alienlab.db.ExecResult;
 import com.alienlab.entity.Artwork;
 import com.alienlab.service.ArtworkService;
+import com.alienlab.service.PicService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
@@ -29,6 +31,8 @@ import static com.alibaba.fastjson.JSON.parseObject;
 public class ArtworkController {
     @Autowired
     private ArtworkService artworkService;
+    @Autowired
+    private ServletContext context;
 
     //添加artwork
     @RequestMapping(value = "/addArtwork", method = RequestMethod.POST)
@@ -47,6 +51,21 @@ public class ArtworkController {
         artwork.setArtist(params.getString("artist"));
         artwork.setNumber(params.getInteger("number"));
         artwork.setDate(Timestamp.valueOf(params.getString("date")));
+        artwork.setPrice(params.getFloatValue("price"));
+        String picture = params.getString("picture");
+        if (picture.equals("（待录入）")){
+            String filename = picture;
+            System.out.println(filename);
+            artwork.setPicture(filename);
+        }else {
+            String path=context.getRealPath("/images");
+            System.out.println(path);
+            PicService service=new PicService();
+            String filename=service.base64ToImage(picture,path);
+            System.out.println(filename);
+            artwork.setPicture(filename);
+        }
+        artwork.setStatus(params.getString("status"));
         try {
             Artwork result = artworkService.addArtwork(artwork);
             if (result == null) {
@@ -90,9 +109,24 @@ public class ArtworkController {
         JSONObject params = form.getJSONObject("params");
         System.out.println(params);
         Artwork artwork = artworkService.getArtworkById(params.getLong("id"));
+        String oldPicture = artwork.getPicture();
         artwork.setName(params.getString("name"));
         artwork.setArtist(params.getString("artist"));
         artwork.setNumber(params.getInteger("number"));
+        artwork.setPrice(params.getFloatValue("price"));
+        String picture = params.getString("picture");
+        if (picture.equals("（待录入）")||picture.equals(oldPicture)){
+            String filename = picture;
+            System.out.println(filename);
+            artwork.setPicture(filename);
+        }else {
+            String path=context.getRealPath("/images");
+            PicService service=new PicService();
+            String filename=service.base64ToImage(picture,path);
+            System.out.println(filename);
+            artwork.setPicture(filename);
+        }
+        artwork.setStatus(params.getString("status"));
         try {
             Artwork result = artworkService.updateArtwork(artwork);
             if (result == null) {

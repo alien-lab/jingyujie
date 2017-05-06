@@ -13,9 +13,11 @@ public class Detail {
     private String label;
     private String content;//内容
     private String type;//（图片、文字、视频）
-    private String link;
+    private String link;//链接
     private Timestamp date;//上传日期
+    private String status;//状态
     private Artwork artwork;//所属艺术品
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,6 +28,7 @@ public class Detail {
     public void setId(Long id) {
         this.id = id;
     }
+
     @Basic
     @Column(name = "label")
     public String getLabel() {
@@ -35,6 +38,7 @@ public class Detail {
     public void setLabel(String label) {
         this.label = label;
     }
+
     @Basic
     @Column(name = "content")
     public String getContent() {
@@ -44,6 +48,7 @@ public class Detail {
     public void setContent(String content) {
         this.content = content;
     }
+
     @Basic
     @Column(name = "type")
     public String getType() {
@@ -53,6 +58,7 @@ public class Detail {
     public void setType(String type) {
         this.type = type;
     }
+
     @Basic
     @Column(name = "link")
     public String getLink() {
@@ -62,6 +68,7 @@ public class Detail {
     public void setLink(String link) {
         this.link = link;
     }
+
     @Basic
     @Column(name = "date")
     public Timestamp getDate() {
@@ -71,6 +78,17 @@ public class Detail {
     public void setDate(Timestamp date) {
         this.date = date;
     }
+
+    @Basic
+    @Column(name = "status")
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @ManyToOne
     @JoinColumn(name = "artwork")
     public Artwork getArtwork() {

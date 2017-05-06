@@ -14,6 +14,10 @@ public class Artwork {
     private Integer number;//数量
     private String artist;//艺术家
     private Timestamp date;//上传日期
+    private String status;//状态
+    private float price;//价格
+    private String picture;//图片
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,6 +28,7 @@ public class Artwork {
     public void setId(Long id) {
         this.id = id;
     }
+
     @Basic
     @Column(name = "name")
     public String getName() {
@@ -33,6 +38,7 @@ public class Artwork {
     public void setName(String name) {
         this.name = name;
     }
+
     @Basic
     @Column(name = "number")
     public Integer getNumber() {
@@ -42,6 +48,7 @@ public class Artwork {
     public void setNumber(Integer number) {
         this.number = number;
     }
+
     @Basic
     @Column(name = "artist")
     public String getArtist() {
@@ -51,6 +58,7 @@ public class Artwork {
     public void setArtist(String artist) {
         this.artist = artist;
     }
+
     @Basic
     @Column(name = "date")
     public Timestamp getDate() {
@@ -59,5 +67,33 @@ public class Artwork {
 
     public void setDate(Timestamp date) {
         this.date = date;
+    }
+
+    @Basic
+    @Column(name = "status")
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    @Basic
+    @Column(name = "price")
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+    @Basic
+    @Column(name = "picture")
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }
